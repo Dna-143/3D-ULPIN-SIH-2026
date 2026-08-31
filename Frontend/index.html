@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="3D ULPIN Part 1 ingestion proof" />
+    <title>3D ULPIN · Part 1</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div>
+        <p class="eyebrow">SIH 2026 · PROBLEM 26011</p>
+        <h1>Trust the coordinates<br />before building the city.</h1>
+        <p class="lede">
+          Validate cadastral GeoJSON, project it into a local metre grid, and isolate
+          human survey errors before they enter the 3D property system.
+        </p>
+      </div>
+      <div class="hero-orbit" aria-hidden="true">
+        <span>LAT/LON</span><strong>→</strong><span>X/Y/Z</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel input-panel">
+        <div class="section-heading">
+          <div>
+            <p class="step">PART 1 / INPUT</p>
+            <h2>Ingestion job</h2>
+          </div>
+          <button id="load-sample" class="button secondary" type="button">Load Pune demo</button>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            Dataset name
+            <input id="dataset-name" value="Pune ward demo" maxlength="120" />
+          </label>
+          <label>
+            Source CRS
+            <input id="source-crs" value="EPSG:4326" />
+          </label>
+          <label>
+            Vertical reference
+            <input id="vertical-reference" placeholder="e.g. EGM2008 orthometric height" />
+          </label>
+          <label>
+            RANSAC threshold (metres)
+            <input id="threshold" type="number" value="0.75" min="0.01" max="100" step="0.01" />
+          </label>
+        </div>
+
+        <div class="file-row">
+          <label class="file-picker">
+            <input id="geojson-file" type="file" accept=".json,.geojson,application/geo+json" />
+            <span>Choose GeoJSON</span>
+            <small id="file-name">No local file selected</small>
+          </label>
+          <label class="check-row">
+            <input id="apply-alignment" type="checkbox" />
+            Apply accepted control alignment to the output
+          </label>
+        </div>
+
+        <div class="run-row">
+          <p id="input-summary">Load the committed sample or choose a GeoJSON file.</p>
+          <button id="run-preview" class="button primary" type="button">Run Part 1</button>
+        </div>
+      </section>
+
+      <section id="result-panel" class="panel result-panel" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="step">PART 1 / RESULT</p>
+            <h2 id="result-title">Quality gate passed</h2>
+          </div>
+          <span id="result-status" class="status">ACCEPTED</span>
+        </div>
+
+        <div class="metric-grid">
+          <article><span>Features</span><strong id="metric-features">—</strong></article>
+          <article><span>Coordinates</span><strong id="metric-coordinates">—</strong></article>
+          <article><span>Scale error</span><strong id="metric-distortion">—</strong></article>
+          <article><span>Control outliers</span><strong id="metric-outliers">—</strong></article>
+        </div>
+
+        <div class="result-grid">
+          <article class="evidence-card">
+            <p class="card-label">LOCAL GRID ORIGIN</p>
+            <strong id="projection-origin">—</strong>
+            <p>X/Y are metres relative to this dataset-centred origin.</p>
+          </article>
+          <article id="outlier-card" class="evidence-card danger">
+            <p class="card-label">RANSAC EXCLUDED</p>
+            <strong id="outlier-ids">None</strong>
+            <p>These points remain visible in the audit report but do not influence alignment.</p>
+          </article>
+        </div>
+
+        <div id="warnings" class="warnings"></div>
+        <details>
+          <summary>Inspect full technical result</summary>
+          <pre id="raw-result"></pre>
+        </details>
+      </section>
+
+      <section id="error-panel" class="panel error-panel" hidden>
+        <p class="step">QUALITY GATE / REJECTED</p>
+        <h2 id="error-title">Input could not be accepted</h2>
+        <pre id="error-detail"></pre>
+      </section>
+    </main>
+
+    <footer>3D ULPIN · deterministic ingestion proof · no database write in preview</footer>
+    <script type="module" src="/assets/app.js"></script>
+  </body>
+</html>

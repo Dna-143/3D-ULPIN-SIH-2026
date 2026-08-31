@@ -1,0 +1,55 @@
+{
+  "dataset_name": "Pune ward 3D parcel demo",
+  "source_crs": "EPSG:4326",
+  "vertical_reference": "Demo orthometric height in metres",
+  "geojson": {
+    "type": "FeatureCollection",
+    "name": "pune_demo_parcels",
+    "features": [
+      {
+        "type": "Feature",
+        "id": "parcel-A",
+        "properties": {"survey_no": "D-101", "usage": "residential"},
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [73.85670, 18.52040, 560.20],
+            [73.85682, 18.52040, 560.25],
+            [73.85682, 18.52056, 560.35],
+            [73.85670, 18.52056, 560.30],
+            [73.85670, 18.52040, 560.20]
+          ]]
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "parcel-B",
+        "properties": {"survey_no": "D-102", "usage": "mixed-use"},
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [73.85682, 18.52040, 560.25],
+            [73.85696, 18.52040, 560.32],
+            [73.85696, 18.52056, 560.42],
+            [73.85682, 18.52056, 560.35],
+            [73.85682, 18.52040, 560.25]
+          ]]
+        }
+      }
+    ]
+  },
+  "control_points": [
+    {"id": "cp-nw", "observed": [73.85670, 18.52056], "reference": [73.85670, 18.52056]},
+    {"id": "cp-ne", "observed": [73.85696, 18.52056], "reference": [73.85696, 18.52056]},
+    {"id": "cp-sw", "observed": [73.85670, 18.52040], "reference": [73.85670, 18.52040]},
+    {"id": "cp-se", "observed": [73.85696, 18.52040], "reference": [73.85696, 18.52040]},
+    {"id": "cp-typo", "observed": [73.86682, 18.52048], "reference": [73.85682, 18.52048]}
+  ],
+  "ransac": {
+    "residual_threshold_m": 0.75,
+    "max_trials": 512,
+    "min_inlier_ratio": 0.6,
+    "random_seed": 42
+  },
+  "apply_control_alignment": false
+}

@@ -1,0 +1,48 @@
+name: Part 1 quality gate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install project
+        run: python -m pip install '.[dev]'
+      - name: Lint
+        run: ruff check . && ruff format --check .
+      - name: Test
+        run: pytest
+
+  container-smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build hardened image
+        run: docker build --tag 3d-ulpin-part1:test .
+      - name: Start API
+        run: docker run --detach --name ulpin-api --publish 8000:8000 3d-ulpin-part1:test
+      - name: Verify API health
+        run: |
+          for attempt in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:8000/api/v1/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs ulpin-api
+          exit 1
+      - name: Clean up
+        if: always()
+        run: docker rm --force ulpin-api || true
